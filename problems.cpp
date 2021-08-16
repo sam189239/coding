@@ -362,16 +362,18 @@ public:
             else{
                 q.pop();
                 if(mp.find(temp.second)==mp.end()) mp[temp.second]=temp.first->val;
-                if(temp.first->left){ q.push({temp.first->left,temp.second-1});
+                if(temp.first->left) q.push({temp.first->left,temp.second-1});
                 if(temp.first->right) q.push({temp.first->right,temp.second+1});
             }
+        
         }
          for(auto x:mp) ans.push_back(x.second);
         return ans;
     }
 
     // https://www.geeksforgeeks.org/find-largest-subtree-sum-tree/
-    int sumOfTree(TreeNode* root){
+    int sumOfTree(TreeNode* root)
+    {
         if(!root) return 0;
         else if(!root->left and !root->right) return root->val;
         else return root->val + sumOfTree(root->left) + sumOfTree(root->right);
@@ -441,7 +443,7 @@ public:
     }
 
     //// 2021-08-16 ////
-    
+
     // https://leetcode.com/problems/two-sum
     vector<int> twoSum(vector<int>& a, int n) {
         int i, j;
@@ -457,7 +459,41 @@ public:
         }
         return ans;
     }
+
+    // https://leetcode.com/problems/best-time-to-buy-and-sell-stock
+    int maxProfit(vector<int>& prices) {      
+        // int ans = 0, diff;
+        // for(auto i = prices.begin(), j = prices.begin()+1;j!=prices.end();){
+        //     diff = *j-*i;
+        //     if(ans<diff) ans = diff;
+        //     if(diff<0){
+        //         if(i==j+1)
+        //         {i++;j++;}
+        //         else i++;
+        //     }
+        //     else j++;
+        // }
+        // return ans;
+        // OR //
+        if(prices.empty()) return 0;
+        int min_price = prices[0], ans = 0;
+        for(int i = 0; i<prices.size(); i++){
+            if(prices[i]<min_price) min_price = prices[i];
+            else if(prices[i] - min_price > ans) ans = prices[i] - min_price;
+        }
+        return ans;
+    }
     
+    // https://leetcode.com/problems/contains-duplicate
+    bool containsDuplicate(vector<int>& nums) {
+        map<int,int> m1;
+        for(int i=0; i<nums.size(); i++){
+            if(m1.find(nums[i])==m1.end()) m1.insert({nums[i],1});
+            else return true;
+        }
+        return false;
+    }
+
 };
 
 int main(){

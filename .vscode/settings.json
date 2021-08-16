@@ -45,6 +45,7 @@
         "xtr1common": "cpp",
         "chrono": "cpp",
         "random": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "vector": "cpp"
     }
 }

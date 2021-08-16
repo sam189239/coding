@@ -494,6 +494,55 @@ public:
         return false;
     }
 
+    // https://leetcode.com/problems/contains-duplicate-ii
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        map<int,vector<int>> m1;
+        for(int i=0; i<nums.size(); i++){
+            map<int,vector<int>>::iterator a = m1.find(nums[i]);
+            vector<int> v; v.push_back(i);
+            if(a==m1.end()) m1.insert({nums[i],v});
+            else if(i - m1[nums[i]].front() <= k) return true;
+            else{m1[nums[i]].emplace(m1[nums[i]].begin(),i);}
+        }
+        return false;
+    }
+
+    // https://leetcode.com/problems/maximum-subarray
+    int maxSubArray(vector<int>& nums) {
+        int sum = 0, ans = INT_MIN;
+        for(int i=0; i<nums.size(); i++){
+            sum += nums[i];
+            if(sum>ans) ans = sum;
+            if(sum<0) sum = 0;
+        }
+        return ans;
+    }
+
+    // https://leetcode.com/problems/range-sum-query-immutable
+    class NumArray {
+    public:
+        vector<int> nums;
+        NumArray(vector<int>& nums) {
+            this->nums = nums;
+        }
+        
+        int sumRange(int left, int right) {
+            return accumulate(nums.begin()+left, nums.begin()+right+1, 0);
+        }
+    };
+
+    // https://leetcode.com/problems/product-of-array-except-self/
+    vector<int> productExceptSelf(vector<int>& nums){
+        int n = nums.size(), prepd = 1, postpd = 1;
+        vector<int> result(n,1);
+        for(int i=0; i<n; i++){
+            result[i] *= prepd;
+            prepd *= nums[i];
+            result[n-i-1] *= postpd;
+            postpd *= nums[n-i-1];
+        }
+        return result;
+    }
 };
 
 int main(){

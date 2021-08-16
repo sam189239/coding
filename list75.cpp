@@ -4,11 +4,9 @@ using namespace std;
 class Arrays{
     public:
 
-    // https://leetcode.com/problems/two-sum 
+    // 1. https://leetcode.com/problems/two-sum 
     vector<int> twoSum(vector<int>& a, int n) {
-        int i, j;
-        map<int, int> m1;
-        vector<int> ans;
+        int i, j; map<int, int> m1; vector<int> ans;
         for(int i=0; i<a.size(); i++){
             if(m1.find(n-a[i]) != m1.end()){
                 ans.push_back(i);
@@ -20,21 +18,8 @@ class Arrays{
         return ans;
     }
 
-    // https://leetcode.com/problems/best-time-to-buy-and-sell-stock
+    // 2. https://leetcode.com/problems/best-time-to-buy-and-sell-stock
     int maxProfit(vector<int>& prices) {      
-        // int ans = 0, diff;
-        // for(auto i = prices.begin(), j = prices.begin()+1;j!=prices.end();){
-        //     diff = *j-*i;
-        //     if(ans<diff) ans = diff;
-        //     if(diff<0){
-        //         if(i==j+1)
-        //         {i++;j++;}
-        //         else i++;
-        //     }
-        //     else j++;
-        // }
-        // return ans;
-        // OR //
         if(prices.empty()) return 0;
         int min_price = prices[0], ans = 0;
         for(int i = 0; i<prices.size(); i++){
@@ -44,7 +29,7 @@ class Arrays{
         return ans;
     }
 
-    // https://leetcode.com/problems/contains-duplicate
+    // 3. https://leetcode.com/problems/contains-duplicate
     bool containsDuplicate(vector<int>& nums) {
         map<int,int> m1;
         for(int i=0; i<nums.size(); i++){
@@ -52,6 +37,30 @@ class Arrays{
             else return true;
         }
         return false;
+    }
+
+    // 4. https://leetcode.com/problems/product-of-array-except-self
+    vector<int> productExceptSelf(vector<int>& nums){
+        int n = nums.size(), prepd = 1, postpd = 1;
+        vector<int> result(n,1);
+        for(int i=0; i<n; i++){
+            result[i] *= prepd;
+            prepd *= nums[i];
+            result[n-i-1] *= postpd;
+            postpd *= nums[n-i-1];
+        }
+        return result;
+    }
+
+    // 5. https://leetcode.com/problems/maximum-subarray
+    int maxSubArray(vector<int>& nums) {
+        int sum = 0, ans = INT_MIN;
+        for(int i=0; i<nums.size(); i++){
+            sum += nums[i];
+            if(sum>ans) ans = sum;
+            if(sum<0) sum = 0;
+        }
+        return ans;
     }
 };
 

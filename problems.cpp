@@ -22,6 +22,10 @@ struct Node
     }
 };
 
+bool cmp_vecpair_sec(pair<int, int>& a, pair<int, int>& b){
+        return a.second > b.second;
+    }
+
 class Solution {
 public:
 
@@ -445,7 +449,7 @@ public:
     //// 2021-08-16 ////
 
     // https://leetcode.com/problems/two-sum
-    vector<int> twoSum(vector<int>& a, int n) {
+    vector<int> twoSum_new(vector<int>& a, int n) {
         int i, j;
         map<int, int> m1;
         vector<int> ans;
@@ -543,7 +547,252 @@ public:
         }
         return result;
     }
+
+    //// 2021-08-17 ////
+
+    // https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/
+    int findMinii(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        if(nums.empty()) return 0;
+        else return nums[0];
+    }
+
+    // https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
+    int findMin(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        if(nums.empty()) return 0;
+        return nums[0];
+    }
+    // OR //
+    int bsearch(vector<int> nums, int left, int right)
+    {
+         if(left < right)
+         {
+             if(nums[left] < nums[right])             
+                 return nums[left];
+             int mid = left + (right - left)/2;
+             if(nums[mid] > nums[right])
+                 return bsearch(nums, mid + 1, right); 
+             else 
+                 return bsearch(nums, left, mid); 
+         }
+        return nums[left];
+    }
+    int findMin(vector<int> nums) 
+    {
+        int n = nums.size();
+        return bsearch(nums, 0, n - 1);
+    }
+
+    // https://leetcode.com/problems/search-in-rotated-sorted-array/
+    int search(vector<int>& nums, int target) {
+        auto it = find(nums.begin(), nums.end(), target);
+        if(it==nums.end()) return -1;
+        else return it - nums.begin();
+    }
+
+    //// 2021-08-18 ////
+
+    
+    vector<int> sort_by_freq(vector<int> nums){
+        map<int,int> m1;
+        for(int i=0; i<nums.size(); i++){
+            if(m1.find(nums[i])==m1.end()) m1[nums[i]] = 1;
+            else m1[nums[i]]++;
+        }
+        vector<pair<int, int> > A;
+        for (auto& it : m1) {
+            A.push_back(it);
+        }
+        sort(A.begin(), A.end(), cmp_vecpair_sec);
+        nums.clear();
+        for (auto& it : A) {
+            for(int i=0; i<it.second; i++)
+            nums.push_back(it.first);
+        }
+        for (auto& it : nums) cout<<it; 
+        return nums;
+    }
+
+    // https://leetcode.com/problems/3sum/
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> answer;
+        if(nums.size()<3) return answer;
+        sort(nums.begin(), nums.end());
+        int i = 0, j = 1, k = nums.size()-1;
+        for(i=0;i<nums.size();i++){
+            j=i+1;
+            k = nums.size()-1;
+            if (i > 0 && nums[i] == nums[i - 1]){
+                continue;
+            }
+            while(j<k){
+                if (k < nums.size() - 1 and nums[k] == nums[k + 1]) {
+                    k--;
+                    continue;
+                }
+                if(nums[i]+nums[j]+nums[k] == 0){
+                    vector<int> ans = {nums[i],nums[j],nums[k]};
+                    answer.push_back(ans);
+                    j++; k--;
+                }               
+                else if((nums[i]+nums[j]+nums[k] < 0)) j++;
+                else k--;
+            }   
+        }
+        return answer;
+    }
+    vector<vector<int>> threeSum2(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> answer;
+        if(nums.size()<3) return answer;
+        for(int i=0; i<nums.size(); i++){
+            vector<int> temp = nums;
+            temp.erase(temp.begin()+i);
+            vector<int> ans = twoSum(temp, -nums[i]);
+            while(!ans.empty()){
+                temp.erase(find(temp.begin(), temp.end(),ans[0]));
+                temp.erase(find(temp.begin(), temp.end(),ans[1]));
+                ans.push_back(nums[i]);
+                sort(ans.begin(), ans.end());
+                if(find(answer.begin(), answer.end(),ans)==answer.end())
+                answer.push_back(ans);
+                ans = twoSum(temp, -nums[i]);
+            }
+            
+        }
+        return answer;
+    }
+    
+    vector<int> twoSum(vector<int>& a, int n) {
+        int i, j;
+        map<int, int> m1;
+        vector<int> ans;
+        for(int i=0; i<a.size(); i++){
+            if(m1.find(n-a[i]) != m1.end()){
+                ans.push_back(a[i]);
+                ans.push_back(m1.find(n-a[i])->first);
+                return ans;
+            }
+            else m1.insert({a[i], i});
+        }
+        return ans;
+    }
+
+    // https://leetcode.com/problems/fibonacci-number/
+    int fib(int n) {
+        n+=1;
+        if(n==0) return 0;
+        if(n==1) return 0;
+        if(n==2) return 1;
+        int a[n];
+        a[0] = 0;
+        a[1] = 1;
+        for(int i = 2; i<n; i++){
+            a[i] = a[i-1] + a[i-2];
+        }
+        return a[n-1];
+    }
+
+    // https://leetcode.com/problems/unique-paths/
+    int uniquePaths(int m, int n) {
+        if(m==1 or n==1) return 1;
+        int arr[m][n];
+        for(int i=0; i<m; i++) arr[i][0] = 1;
+        for(int i=0; i<n; i++) arr[0][i] = 1;
+        for(int i=1; i<m; i++){
+            for(int j=1; j<n; j++){
+                arr[i][j] = arr[i-1][j] + arr[i][j-1];
+            }
+        }
+        return arr[m-1][n-1];
+    }
+
+    // https://leetcode.com/problems/n-th-tribonacci-number/
+    int tribonacci(int n) {
+        if(n<2) return n;
+        if(n==2) return 1;
+        int arr[n+1];
+        arr[0] = 0;
+        arr[1] = 1;
+        arr[2] = 1;
+        for(int i=3; i<=n; i++) arr[i] = arr[i-1]+arr[i-2]+arr[i-3];
+        return arr[n];
+    }
+
+    // https://leetcode.com/problems/maximum-product-subarray/
+    int maxProduct(vector<int>& nums) {
+        int n = nums.size();
+        if(n==0) return 0;
+        if(n==1) return nums[0];
+        int max_tot = nums[0], max_curr = nums[0], min_curr = nums[0];
+        for(int i=1;i<n;i++){
+            int temp = max_curr;
+            max_curr = max({nums[i], max_curr*nums[i], min_curr*nums[i]});
+            min_curr = min({nums[i], temp*nums[i], min_curr*nums[i]});
+            max_tot = max(max_curr, max_tot);
+        }
+        return max_tot;
+    }
+
+    // https://leetcode.com/problems/decode-ways/
+    int numDecodings(string s) {
+        int n = s.size(), arr[n+1];
+        arr[0] = 1;
+        arr[1] = (s[0]=='0')? 0:1;
+        for(int i = 2; i<=n; i++) arr[i]=0;
+        for(int i = 2; i<=n; i++){
+            int n_curr = int(s[i-1]) - '0', n_prev = int(s[i-2]) - '0', n_comb = n_prev * 10 + n_curr;
+            if(n_curr >= 1) arr[i]+=arr[i-1];
+            if(n_comb >=10 and n_comb <=26) arr[i]+=arr[i-2];
+        }
+        return arr[n];
+    }
+
+    // https://leetcode.com/problems/house-robber/
+    int rob(vector<int>& nums) {
+        int ans=0;
+        if(nums.size()==0) return 0;
+        if(nums.size()==1) return nums[0];
+        if(nums.size()==2) return max(nums[0],nums[1]);
+        int dp[nums.size()+1];
+        dp[0]=0;dp[1]=nums[0];dp[2] = max(nums[0],nums[1]);
+        int i = 3;
+        while(i<nums.size()+1){
+            dp[i] = max(dp[i-2],dp[i-3])+nums[i-1];
+            i++;
+            cout<<dp[i-1]<<"\n";
+        }
+        ans = max(dp[i-1],dp[i-2]);
+        return ans;  
+    }
+    int rob2(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        if(nums.size()==1) return nums[0];
+        if(nums.size()==2) return max(nums[0],nums[1]);
+        int dp[nums.size()+1];
+        dp[0]=0;dp[1]=nums[0];dp[2] = max(nums[0],nums[1]);
+        int i = 3;
+        while(i<nums.size()+1){
+            dp[i] = max(dp[i-2]+nums[i-1],dp[i-1]);
+            cout<<dp[i]<<"\n";
+            i++;
+        }
+        return dp[nums.size()];  
+    }
+
+    // https://leetcode.com/problems/container-with-most-water/
+    int maxArea(vector<int>& height) {
+        int i = 0, j = height.size()-1, max_area = INT_MIN;
+        while(i<j){
+            max_area = max((j-i) * min(height[i], height[j]), max_area);
+            if(height[i]<=height[j]) i++;
+            else j--;
+        }
+        return max_area;
+    }
 };
+
 
 int main(){
     Solution s;
@@ -558,6 +807,7 @@ int main(){
     // vector<string> s2 = s.letterCombinations("23");
     // for(auto i = s2.begin(); i != s2.end(); i++) cout<<*i<<" ";
     // cout<<endl;
-
+    // vector<int> v = {1,2,3,4,5,6,1,2,3,2,2,3};
+    // s.sort_by_freq(v);
     return 0;
 }

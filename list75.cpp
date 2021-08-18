@@ -186,6 +186,18 @@ class DynamicProgramming{
         return dp[nums.size()];  
     }
 
+    // 8. https://leetcode.com/problems/house-robber-ii/
+    int rob_2(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        if(nums.size()==1) return nums[0];
+        if(nums.size()==2) return max(nums[0],nums[1]);
+        vector<int> temp = nums, temp2 = nums;
+        temp.pop_back();
+        temp2.erase(temp2.begin());
+        return max(rob(temp),rob(temp2));
+    }
+    
+
     // 9. https://leetcode.com/problems/decode-ways/
     int numDecodings(string s) {
         int n = s.size(), arr[n+1];

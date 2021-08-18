@@ -750,7 +750,7 @@ public:
     }
 
     // https://leetcode.com/problems/house-robber/
-    int rob(vector<int>& nums) {
+    int rob_1(vector<int>& nums) {
         int ans=0;
         if(nums.size()==0) return 0;
         if(nums.size()==1) return nums[0];
@@ -766,7 +766,7 @@ public:
         ans = max(dp[i-1],dp[i-2]);
         return ans;  
     }
-    int rob2(vector<int>& nums) {
+    int rob_1_2(vector<int>& nums) {
         if(nums.size()==0) return 0;
         if(nums.size()==1) return nums[0];
         if(nums.size()==2) return max(nums[0],nums[1]);
@@ -790,6 +790,32 @@ public:
             else j--;
         }
         return max_area;
+    }
+
+    // https://leetcode.com/problems/house-robber-ii/
+    int rob_2(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        if(nums.size()==1) return nums[0];
+        if(nums.size()==2) return max(nums[0],nums[1]);
+        vector<int> temp = nums, temp2 = nums;
+        temp.pop_back();
+        temp2.erase(temp2.begin());
+        return max(house_rob(temp),house_rob(temp2));
+    }
+    
+    int house_rob(vector<int> nums){
+        if(nums.size()==0) return 0;
+        if(nums.size()==1) return nums[0];
+        if(nums.size()==2) return max(nums[0],nums[1]);
+        int dp[nums.size()+1];
+        dp[0]=0;dp[1]=nums[0];dp[2] = max(nums[0],nums[1]);
+        int i = 3;
+        while(i<nums.size()+1){
+            dp[i] = max(dp[i-2]+nums[i-1],dp[i-1]);
+            cout<<dp[i]<<"\n";
+            i++;
+        }
+        return dp[nums.size()]; 
     }
 };
 

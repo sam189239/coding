@@ -593,7 +593,6 @@ public:
 
     //// 2021-08-18 ////
 
-    
     vector<int> sort_by_freq(vector<int> nums){
         map<int,int> m1;
         for(int i=0; i<nums.size(); i++){
@@ -816,6 +815,151 @@ public:
             i++;
         }
         return dp[nums.size()]; 
+    }
+
+    //// 2021-08-26 ////
+
+    // https://leetcode.com/problems/valid-palindrome/
+    bool isPalindrome(string s) {
+        // int n = s.size();
+        // for(int i=0; i<s.size(); i++){
+        //     s[i] = tolower(s[i]);
+        //     int m = int(s[i]);
+        //     if((m>=48 and m<=57) or (m>=97 and m<=122))
+        //         continue;
+        //     else{
+        //         s.erase(s.begin()+i);
+        //         i--;
+        //     }
+        // }
+        // string temp = s;
+        // reverse(temp.begin(), temp.end());
+        // return s==temp;
+        for (int i = 0, j = s.size() - 1; i < j; i++, j--) { // Move 2 pointers from each end until they collide
+            while (isalnum(s[i]) == false && i < j) i++; // Increment left pointer if not alphanumeric
+            while (isalnum(s[j]) == false && i < j) j--; // Decrement right pointer if no alphanumeric
+            if (toupper(s[i]) != toupper(s[j])) return false; // Exit and return error if not match
+        }
+        return true;
+    }
+
+    // https://leetcode.com/problems/valid-anagram/
+    bool isAnagram(string s, string t) {
+        if(s.length()!=t.length())
+            return false;
+        sort(s.begin(), s.end());
+        sort(t.begin(), t.end());
+        return s==t;
+    }
+
+    // https://leetcode.com/problems/valid-parentheses/
+    bool isValid(string s) {
+        stack<char> s1;
+        for(auto i:s){
+            switch(i){
+                case '(':
+                    s1.push(i);
+                    break;
+                case '{':
+                    s1.push(i);
+                    break;
+                case '[':
+                    s1.push(i);
+                    break;
+                case ')':
+                    if(!s1.empty() && s1.top()=='(') s1.pop();
+                    else return false;    
+                    break;  
+                case '}':
+                    if(!s1.empty() && s1.top()=='{') s1.pop();
+                    else return false;    
+                    break;
+                case ']':
+                    if(!s1.empty() && s1.top()=='[') s1.pop();
+                    else return false;    
+                    break;   
+            }
+        }
+        return s1.empty();
+    }
+
+    // https://leetcode.com/problems/longest-substring-without-repeating-characters/
+    int lengthOfLongestSubstring(string s) {
+        map<char, int> m;
+        int ans=0, i = 0, j = 0;
+        while(j<s.size()){
+            if(m.find(s[j])==m.end()){
+                m[s[j]] = j;
+                ans = max(ans,(j-i+1));
+            }
+            else{
+                i = max(m[s[j]] + 1, i);
+                m[s[j]] = j;
+                ans = max(ans,(j-i+1));
+            }
+            j++;
+        }
+        return ans;
+    }
+
+    // https://leetcode.com/problems/palindromic-substrings/
+    int countSubstrings(string s) {
+        int res = 0, n = s.length();
+        for(int i = 0; i < n; i++){
+            for(int j = 0; i-j >= 0 && i+j < n && s[i-j] == s[i+j]; j++)res++; //substring s[i-j, ..., i+j]
+            for(int j = 0; i-1-j >= 0 && i+j < n && s[i-1-j] == s[i+j]; j++)res++; //substring s[i-1-j, ..., i+j]
+        }
+        return res;
+    }
+
+    // https://leetcode.com/problems/longest-palindromic-substring/
+    string longestPalindrome(string s) {
+        int res = 0, n = s.length(), len=0, start=0, end=0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; i-j >= 0 && i+j < n && s[i-j] == s[i+j]; j++){
+                res++; //substring s[i-j, ..., i+j]
+                if(2*j+1 > len){
+                    len = 2*j+1;
+                    start = i-j;
+                    end = i+j;
+                }
+            }
+            for(int j = 0; i-1-j >= 0 && i+j < n && s[i-1-j] == s[i+j]; j++){
+                res++; //substring s[i-1-j, ..., i+j]
+                if(2*j+2 > len){
+                    len = 2*j+2;
+                    start = i-1-j;
+                    end = i+j;
+                }
+            }
+        }
+        string temp;
+        while(start<=end){
+            temp.push_back(s[start++]);
+        }
+        return temp;
+    }
+
+    // https://leetcode.com/problems/group-anagrams/
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        map<string, vector<int>> m;
+        vector<vector<string>> ans;
+        for(int i = 0; i<strs.size(); i++){
+            string temp = strs[i];
+            sort(temp.begin(), temp.end());
+            if(m.find(temp)==m.end()){
+                m[temp] = {i};
+            }
+            else{
+                m[temp].push_back(i);
+            }
+        }
+        for(auto i = m.begin(); i!=m.end(); i++){
+            vector<string> temp2;
+            for(int j:i->second) temp2.push_back(strs[j]);
+            ans.push_back(temp2);
+        }
+        return ans;
     }
 };
 
